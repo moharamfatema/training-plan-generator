@@ -1,3 +1,18 @@
+# The week class
+
+week types
+
+1. test
+2. filler
+3. recovery
+4. build 1
+5. build 2
+6. key
+7. taper
+8. race
+
+3 - 6 are main weeks
+
 # plan types
 
 ## base

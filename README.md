@@ -74,3 +74,8 @@ src\
         week.py
     main.py
 ```
+
+## Notes and thought process
+
+You can find my notes and thought process in `my_notes.md`.
+
