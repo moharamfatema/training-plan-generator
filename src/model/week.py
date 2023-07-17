@@ -1,9 +1,14 @@
 """
+Module for the Week class.
+
+This module contains the Week class, which represents a week of training.
+
+Classes:
+    Week: A week of training.
 """
 
 # imports
 from datetime import datetime, timedelta
-from typing import List, Optional
 
 # constants
 TEST = "Test"
@@ -67,7 +72,9 @@ class Week:
         self.__type = week_type
 
     def __str__(self) -> str:
-        return f"Week #{self.number} - {self.type} - from {self.start.strftime('%d %b')} to {self.end.strftime('%d %b')}"
+        return f"Week #{self.number} \t- {self.type} \t\
+                - from {self.start.strftime('%d %b')} \t\
+                    to {self.end.strftime('%d %b')}"
 
     def __repr__(self) -> str:
         return self.__str__()

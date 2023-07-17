@@ -1,8 +1,0 @@
-; specify start directory
-init-hook='import sys; sys.path.append("./src")'
-
-; style
-max-line-length = "80"
-
-; ignore paths
-ignore-patterns = "**/*.pyc"

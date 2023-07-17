@@ -1,5 +1,7 @@
 # imports
-from .week import (
+from datetime import datetime, timedelta
+from typing import List
+from model.week import (
     Week,
     TEST,
     FILLER,
@@ -10,8 +12,6 @@ from .week import (
     TAPER,
     RACE,
 )
-from datetime import datetime, timedelta
-from typing import List
 
 # constants
 PLAN_0 = 0
@@ -30,10 +30,23 @@ class Plan:
         ).days >= 8 * 7, "Training plan must be at least 8 weeks long"
         self.__end_date = end_date
 
-        # * assumption : race day is always n weeks away from start day (no partial weeks)
-        self.__num_weeks = (1 + (end_date - start_date).days )// 7
-        print("num weeks : ",self.__num_weeks) # debug
-        self.__start_date = start_date
+        # * assumption : race day id either exactly n days from start day
+        # or start day will be modified to fit the criteria
+
+        diff = (end_date - start_date).days + 1
+        if diff % 7 != 0:
+            self.__start_date = start_date + timedelta(days=diff % 7)
+            print(
+                f"Warning : Start date modified to fit training plan\n\
+            Original start date : {start_date}\n\
+            New start date : {self.__start_date}"
+            )
+        else:
+            self.__start_date = start_date
+            print(f"Start date : {self.__start_date}")
+
+        self.__num_weeks = (1 + (self.__end_date - self.__start_date).days) // 7
+        # self.__start_date = start_date
         self.__current_date = self.__start_date
 
         self.__weeks = []
@@ -43,12 +56,11 @@ class Plan:
         weeks_remaining = (self.__num_weeks - 8) % 4
         if weeks_remaining == 0:
             return PLAN_0
-        elif weeks_remaining == 1:
+        if weeks_remaining == 1:
             return PLAN_1
-        elif weeks_remaining == 2:
+        if weeks_remaining == 2:
             return PLAN_2
-        else:
-            return PLAN_3
+        return PLAN_3
 
     def __generate_main_block(self, start_count) -> list[Week]:
         weeks = []
@@ -64,7 +76,7 @@ class Plan:
         weeks: list[Week] = []
         if plan_type == PLAN_0:
             return self.__generate_main_block(start_count)
-        elif plan_type == PLAN_1:
+        if plan_type == PLAN_1:
             self.__current_date += timedelta(days=7)
             filler_week = Week(start_count, self.__current_date, FILLER)
             start_count += 1
@@ -90,7 +102,6 @@ class Plan:
 
         # get plan type
         plan_type = self.__get_plan_type()
-        print("plan type : ",plan_type) # debug
 
         num_main_blocks = (self.__num_weeks - 4) // 4
 
@@ -111,15 +122,20 @@ class Plan:
         count += 1
         self.__current_date += timedelta(days=7)
         self.__weeks.append(Week(count, self.__current_date, RACE))
+        self.__current_date += timedelta(days=6)
+
         assert (
             count == self.__num_weeks
-        ), f"Internal Error : Incorrect number of weeks generated\n Expected : {self.__num_weeks}\n Actual : {count}"
-        # assert (
-        #     self.__current_date == self.__end_date
-        # ), "Internal Error : Incorrect end date generated"
-        # assert (
-        #     self.__weeks[-1] == self.__end_date
-        # ), "Internal Error : Incorrect end date generated"
+        ), f"Internal Error : Incorrect number of weeks generated\n\
+              Expected : {self.__num_weeks}\n Actual : {count}"
+        assert (
+            self.__current_date == self.__end_date
+        ), f"Internal Error : Incorrect end date generated\n\
+                Expected : {self.__end_date}\n Actual : {self.__current_date}"
+        assert (
+            self.__weeks[-1].end == self.__end_date
+        ), f"Internal Error : Incorrect end date generated\n\
+                Expected : {self.__end_date}\n Actual : {self.__weeks[-1].end}"
 
     @property
     def weeks(self) -> List[Week]:

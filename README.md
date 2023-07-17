@@ -7,32 +7,41 @@
 ## Setup
 
 1. Install Python 3.9
-2. Install virtualenv
+2. CD into the project directory
+
+    ```bash
+    cd training-plan-generator
+    ```
+
+3. Install virtualenv
 
     ```bash
     pip install virtualenv
     ```
 
-3. Create a virtual environment
+4. Create a virtual environment
 
     ```bash
     python -m venv venv
     ```
 
-4. Activate the virtual environment
+5. Activate the virtual environment
 
     ```bash
     ./venv/Script/activate
     ```
 
-5. Install dependencies
+6. Install dependencies
 
     ```bash
     pip install -r requirements.txt
     ```
 
-6. Run the app
+7. Run the app
 
     ```bash
-    python main.py
+    python src/main.py
     ```
+
+## Assumptions
+
