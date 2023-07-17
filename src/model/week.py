@@ -15,16 +15,17 @@ KEY = "Key"
 TAPER = "Taper"
 RACE = "Race"
 
-NEXT_WEEK_TYPES = {
-    TEST: {TEST,FILLER, RECOVERY},
-    FILLER: {RECOVERY},
-    RECOVERY: {BUILD_1},
-    BUILD_1: {BUILD_2},
-    BUILD_2: {KEY},
-    KEY: {RECOVERY, TAPER},
-    TAPER: {RACE},
-    RACE: {}
+WEEK_TYPES = {
+    TEST,
+    FILLER,
+    RECOVERY,
+    BUILD_1,
+    BUILD_2,
+    KEY,
+    TAPER,
+    RACE,
 }
+
 
 class Week:
     """A week of training.
@@ -35,8 +36,9 @@ class Week:
         end (datetime): The end date of the week.
         type (str): The type of week.
     """
+
     def __init__(self, number: int, start: datetime, week_type: str):
-        assert week_type in NEXT_WEEK_TYPES.keys, f"Invalid week type: {week_type}"
+        assert week_type in WEEK_TYPES, f"Invalid week type: {week_type}"
         assert number > 0, f"Invalid week number: {number}"
 
         self.__number = number
@@ -61,11 +63,11 @@ class Week:
 
     @type.setter
     def type(self, week_type: str) -> None:
-        assert week_type in NEXT_WEEK_TYPES.keys, f"Invalid week type: {week_type}"
+        assert week_type in WEEK_TYPES, f"Invalid week type: {week_type}"
         self.__type = week_type
 
     def __str__(self) -> str:
         return f"Week #{self.number} - {self.type} - from {self.start} to {self.end}"
 
-    def get_next_week_types(self) -> str:
-        return NEXT_WEEK_TYPES[self.type]
+    def __repr__(self) -> str:
+        return self.__str__()

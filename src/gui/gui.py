@@ -10,6 +10,7 @@ from tkinter import ttk
 from ttkthemes import ThemedTk
 from tkcalendar import DateEntry
 
+
 def enter_date(top, text):
     """Creates a DateEntry widget with a label above it.
 
