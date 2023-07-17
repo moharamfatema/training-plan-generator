@@ -1,0 +1,11 @@
+[tool.black]
+line_length = 80
+include_trailing_comma = true
+include = '\.py?$'
+single-quotes = true
+double-quotes = false
+
+[tool.pylint.format]
+max-line-length = "80"
+# starting point file
+init-hook = "import sys; sys.path.append('.'); import pylint_config; pylint_config.register_extensions()"
