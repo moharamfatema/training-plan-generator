@@ -14,15 +14,27 @@ from model.week import (
 )
 
 # constants
-PLAN_0 = 0
-PLAN_1 = 1
-PLAN_2 = 2
-PLAN_3 = 3
+PLAN_0 = 0  # 4 + 4n weeks
+PLAN_1 = 1  # 5 + 4n weeks
+PLAN_2 = 2  # 6 + 4n weeks
+PLAN_3 = 3  # 7 + 4n weeks
 
 MAIN_WEEK_TYPES = [RECOVERY, BUILD_1, BUILD_2, KEY]
 
 
 class Plan:
+    """Class representing a training plan.
+
+    Attributes:
+        start_date (datetime): The start date of the training plan.
+        end_date (datetime): The end date of the training plan.
+        num_weeks (int): The number of weeks in the training plan.
+        weeks (list[Week]): The weeks in the training plan.
+
+    Methods:
+        weeks (getter): Returns the weeks in the training plan.
+    """
+
     def __init__(self, start_date: datetime, end_date: datetime):
         # min 8 weeks
         assert (
@@ -43,16 +55,17 @@ class Plan:
             )
         else:
             self.__start_date = start_date
-            print(f"Start date : {self.__start_date}")
 
         self.__num_weeks = (1 + (self.__end_date - self.__start_date).days) // 7
-        # self.__start_date = start_date
+
         self.__current_date = self.__start_date
+        self.__plan_type = self.__get_plan_type()
 
         self.__weeks = []
         self.__generate_plan()
 
     def __get_plan_type(self):
+        """Returns the plan type based on the number of weeks."""
         weeks_remaining = (self.__num_weeks - 8) % 4
         if weeks_remaining == 0:
             return PLAN_0
@@ -63,6 +76,12 @@ class Plan:
         return PLAN_3
 
     def __generate_main_block(self, start_count) -> list[Week]:
+        """Generates a main block of 4 weeks.
+        Week 1 : Recovery
+        Week 2 : Build 1
+        Week 3 : Build 2
+        Week 4 : Key
+        """
         weeks = []
         for week_type in MAIN_WEEK_TYPES:
             weeks.append(Week(start_count, self.__current_date, week_type))
@@ -70,23 +89,21 @@ class Plan:
             start_count += 1
         return weeks
 
-    def __generate_first_main_week(
-        self, start_count, plan_type: int
-    ) -> list[Week]:
+    def __generate_first_main_block(self, start_count) -> list[Week]:
         weeks: list[Week] = []
-        if plan_type == PLAN_0:
-            return self.__generate_main_block(start_count)
-        if plan_type == PLAN_1:
+        if self.__plan_type == PLAN_1:
+            # generate filler week
             self.__current_date += timedelta(days=7)
             filler_week = Week(start_count, self.__current_date, FILLER)
             start_count += 1
-            main_weeks = self.__generate_main_block(start_count)
-            weeks = [filler_week] + main_weeks
-        elif plan_type == PLAN_2:
+            weeks = [filler_week]
+        elif self.__plan_type == PLAN_2:
+            # generate half main block
             self.__current_date -= timedelta(days=2 * 7)
             weeks = self.__generate_main_block(start_count)
             weeks = weeks[2:]
-        elif plan_type == PLAN_3:
+        elif self.__plan_type == PLAN_3:
+            # generate main block minus 1 week
             self.__current_date -= timedelta(days=7)
             weeks = self.__generate_main_block(start_count)
             weeks = weeks[1:]
@@ -100,14 +117,12 @@ class Plan:
             self.__current_date += timedelta(days=7)
             count += 1
 
-        # get plan type
-        plan_type = self.__get_plan_type()
-
         num_main_blocks = (self.__num_weeks - 4) // 4
+        print(f"num_main_blocks : {num_main_blocks}")
 
-        if plan_type != PLAN_0:
-            # generate first main block
-            main_weeks = self.__generate_first_main_week(count, plan_type)
+        if self.__plan_type != PLAN_0:
+            # generate first block
+            main_weeks = self.__generate_first_main_block(count)
             self.__weeks += main_weeks
             count += len(main_weeks)
 
@@ -117,7 +132,7 @@ class Plan:
             self.__weeks += weeks
             count += 4
 
-        # generate final weeks
+        # generate last 2 weeks
         self.__weeks.append(Week(count, self.__current_date, TAPER))
         count += 1
         self.__current_date += timedelta(days=7)
@@ -139,10 +154,13 @@ class Plan:
 
     @property
     def weeks(self) -> List[Week]:
+        """Returns the weeks in the training plan."""
         return self.__weeks
 
     def __str__(self) -> str:
+        """Returns a string representation of the training plan."""
         return "\n".join([str(week) for week in self.__weeks])
 
     def __repr__(self) -> str:
+        """Returns a string representation of the training plan."""
         return str(self)

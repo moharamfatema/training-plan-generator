@@ -8,4 +8,6 @@ double-quotes = false
 [tool.pylint.format]
 max-line-length = "80"
 # starting point file
-init-hook = "import sys; sys.path.append('.'); import pylint_config; pylint_config.register_extensions()"
+init-hook = "import sys; sys.path.append('./src'); "
+# ignore pycache
+ignore-patterns = ".*/*.pyc$"
