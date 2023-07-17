@@ -67,7 +67,7 @@ class Week:
         self.__type = week_type
 
     def __str__(self) -> str:
-        return f"Week #{self.number} - {self.type} - from {self.start} to {self.end}"
+        return f"Week #{self.number} - {self.type} - from {self.start.strftime('%d %b')} to {self.end.strftime('%d %b')}"
 
     def __repr__(self) -> str:
         return self.__str__()

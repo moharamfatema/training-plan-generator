@@ -30,10 +30,9 @@ class Plan:
         ).days >= 8 * 7, "Training plan must be at least 8 weeks long"
         self.__end_date = end_date
 
-        # * assumption : modify start date so that race day is n weeks away
-        self.__num_weeks = (end_date - start_date).days // 7
-        print(self.__num_weeks)
-        # self.__start_date = end_date - timedelta(days=self.__num_weeks * 7)
+        # * assumption : race day is always n weeks away from start day (no partial weeks)
+        self.__num_weeks = (1 + (end_date - start_date).days )// 7
+        print("num weeks : ",self.__num_weeks) # debug
         self.__start_date = start_date
         self.__current_date = self.__start_date
 
@@ -41,7 +40,7 @@ class Plan:
         self.__generate_plan()
 
     def __get_plan_type(self):
-        weeks_remaining = (self.__num_weeks - 8) // 4
+        weeks_remaining = (self.__num_weeks - 8) % 4
         if weeks_remaining == 0:
             return PLAN_0
         elif weeks_remaining == 1:
@@ -91,6 +90,7 @@ class Plan:
 
         # get plan type
         plan_type = self.__get_plan_type()
+        print("plan type : ",plan_type) # debug
 
         num_main_blocks = (self.__num_weeks - 4) // 4
 
@@ -111,9 +111,9 @@ class Plan:
         count += 1
         self.__current_date += timedelta(days=7)
         self.__weeks.append(Week(count, self.__current_date, RACE))
-        # assert (
-        #     count == self.__num_weeks
-        # ), f"Internal Error : Incorrect number of weeks generated\n Expected : {self.__num_weeks}\n Actual : {count}"
+        assert (
+            count == self.__num_weeks
+        ), f"Internal Error : Incorrect number of weeks generated\n Expected : {self.__num_weeks}\n Actual : {count}"
         # assert (
         #     self.__current_date == self.__end_date
         # ), "Internal Error : Incorrect end date generated"
