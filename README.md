@@ -55,19 +55,19 @@ I have made the following assumptions:
 
 ## Project Structure and Design
 
-The project follows MVC pattern. The model is in `src/model`, the view is in `src/gui`, and the controller is in `src/main.py`.
+The project follows MVC pattern. The model is in `src/model`, the view is in `src/view`, and the controller is in `src/main.py`.
 
 The data flows only from the controller to the view. The view is not allowed to modify the data. The view is only allowed to display the data.
 
 The model receives the data from the controller and processes it.
 
-### Project structure:
+### Project structure
 
 ```plaintext
 src\
-    gui\
+    view\
         __init__.py
-        gui.py
+        view.py
     model\
         __init__.py
         plan.py
@@ -78,4 +78,3 @@ src\
 ## Notes and thought process
 
 You can find my notes and thought process in `my_notes.md`.
-

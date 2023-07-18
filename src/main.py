@@ -2,8 +2,8 @@
 Main file for the application.
 """
 from datetime import datetime
+from view.view import Gui
 from model.plan import Plan
-from gui.gui import Gui
 
 GUI_ENABLED = True
 
@@ -19,7 +19,7 @@ class Controller:
             print(
                 Controller.generate_plan(
                     # modfy below this line
-                    start_date=datetime(2021, 5, 30),
+                    start_date=datetime(2021, 5, 31),
                     end_date=datetime(2021, 8, 14)
                     # modify above this line
                 )

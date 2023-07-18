@@ -12,6 +12,19 @@ from tkcalendar import DateEntry
 
 
 class Gui:
+    """Class representing the GUI for the training plan generator.
+
+    Attributes:
+        __root (Tk): The parent widget.
+        __start_date (DateEntry): The DateEntry widget for the start date.
+        __end_date (DateEntry): The DateEntry widget for the end date.
+        __command (function): The function to run when the button is pressed.
+
+    Methods:
+        start_date (getter): Returns the start date.
+        end_date (getter): Returns the end date.
+        enter_date: Creates a DateEntry widget with a label above it."""
+
     def __init__(self, button_action) -> None:
         self.__command = button_action
         self.__root = ThemedTk(theme="breeze")
@@ -19,10 +32,10 @@ class Gui:
         self.__root.geometry("480x500")
         # self.__root.resizable(False, False)
 
-        self.__start_date = self.enter_date("Choose starting date", row=0)
-        self.__end_date = self.enter_date("Choose ending date", row=1)
+        self.__start_date = self.__enter_date("Choose starting date", row=0)
+        self.__end_date = self.__enter_date("Choose ending date", row=1)
 
-        self.start_button()
+        self.__start_button()
 
         self.__root.mainloop()
 
@@ -34,7 +47,7 @@ class Gui:
     def end_date(self) -> DateEntry:
         return self.__end_date
 
-    def enter_date(self, text, row):
+    def __enter_date(self, text, row):
         """Creates a DateEntry widget with a label above it.
 
         Args:
@@ -69,9 +82,9 @@ class Gui:
 
         except (AssertionError, ValueError) as err:
             res = err
-        self.display_plan(res)
+        self.__display_plan(res)
 
-    def start_button(self):
+    def __start_button(self):
         """Creates a button that generates the training plan.
 
         Args:
@@ -92,7 +105,7 @@ class Gui:
 
         return btn
 
-    def display_plan(self, plan):
+    def __display_plan(self, plan):
         """Displays the training plan.
 
         Args:
